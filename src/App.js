@@ -5,6 +5,9 @@ import loginService from './services/login';
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
+  const [newTitle, setNewTitle] = useState('')
+  const [newAuthor, setNewAuthor] = useState('')
+  const [newUrl, setNewUrl] = useState('')
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
@@ -34,18 +37,34 @@ const App = () => {
       window.localStorage.setItem(
         'loggedBlogappUser', JSON.stringify(user)
       )
-
       setUser(user)
       setUsername('')
       setPassword('')
     } catch (exception) {
+
       console.log('wrong credentials')
+      
     }
   }
 
   const handleLogOut = () => {
     window.localStorage.removeItem('loggedBlogappUser')
     window.location.reload()
+  }
+
+  const handleNewPost = async (event) => {
+    event.preventDefault()
+    const newBlog = {
+      title: newTitle,
+      author: newAuthor,
+      ulr: newUrl
+    }
+
+    const addedBlog = await blogService.create(newBlog)
+    setNewTitle('')
+    setNewAuthor('')
+    setNewUrl('')
+    setBlogs(blogs.concat(addedBlog))
   }
 
     
@@ -81,10 +100,42 @@ const App = () => {
     return (
       <div>
       <h2>blogs</h2>
+     <h3>{user.name} logged in <button onClick={handleLogOut}>Log Out</button></h3>
       {blogs.map(blog =>
         <Blog key={blog.id} blog={blog} />
       )}
-      <button onClick={handleLogOut}>Log Out</button>
+      
+      <form onSubmit={handleNewPost}>
+      <h2>Create new</h2>
+        <div>
+          title:
+          <input
+          type="text"
+          value={newTitle}
+          name="Title"
+          onChange={({ target }) => setNewTitle(target.value)}
+          />
+        </div>
+        <div>
+          author:
+          <input
+          type="text"
+          value={newAuthor}
+          name="author"
+          onChange={({ target }) => setNewAuthor(target.value)}
+          />
+        </div>
+        <div>
+          url
+          <input
+          type="text"
+          value={newUrl}
+          name="url"
+          onChange={({ target }) => setNewUrl(target.value)}
+          />
+        </div>
+        <button type="submit">Create</button>
+      </form>
     </div>
   )
 }
