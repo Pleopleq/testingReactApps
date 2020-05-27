@@ -76,7 +76,8 @@ const App = () => {
     const newBlog = {
       title: newTitle,
       author: newAuthor,
-      ulr: newUrl
+      url: newUrl,
+      likes: 0
     }
 
     const addedBlog = await blogService.create(newBlog)
@@ -113,10 +114,8 @@ const App = () => {
         <button onClick={() => setBlogFormVisible(false)}>Cancel</button>
       </div>
     </div>
-
     )
   }
-
     
   if (user === null) { 
     return ( 
@@ -147,6 +146,7 @@ const App = () => {
     </div>
     )
   }
+
     return (
       <div>
         <h2>blogs</h2>
@@ -155,8 +155,7 @@ const App = () => {
         <h3>{user.name} logged in <button onClick={handleLogOut}>Log Out</button></h3>
         
         {blogs.map(blog =>
-          <Blog key={blog.id} blog={blog} />
-        )}
+        <Blog key={blog.id} blog={blog} /> )}
 
         {blogForm()}
     </div>
