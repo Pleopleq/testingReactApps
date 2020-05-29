@@ -18,6 +18,13 @@ const App = () => {
   const [blogFormVisible, setBlogFormVisible] = useState(false)
   const [user, setUser] = useState(null)
 
+  const highestLiked = blogs => {
+    
+    const result = blogs.sort((a, b) => b.likes - a.likes)
+
+    return result
+  }
+
   useEffect(() => {
     blogService.getAll().then(blogs =>
       setBlogs( blogs )
@@ -94,8 +101,7 @@ const App = () => {
 
   const blogForm = () => {
     const hideWhenVisible = { display: blogFormVisible ? 'none' : ''}
-    const showWhenVisible = { display: blogFormVisible ? '' : 'none'}
-    
+    const showWhenVisible = { display: blogFormVisible ? '' : 'none'}    
     return (
     <div>
       <div style={hideWhenVisible}>
@@ -154,8 +160,9 @@ const App = () => {
 
         <h3>{user.name} logged in <button onClick={handleLogOut}>Log Out</button></h3>
         
-        {blogs.map(blog =>
-        <Blog key={blog.id} blog={blog} /> )}
+        {highestLiked(blogs).map(blog =>
+        <Blog key={blog.id} blog={blog} /> 
+        )}
 
         {blogForm()}
     </div>
