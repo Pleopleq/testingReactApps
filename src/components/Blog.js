@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import blogService from '../services/blogs'
 
 const blogStyle = {
@@ -22,6 +22,12 @@ const BlogMoreInfo = ({ url, likes, username, visible, handleLikeButton}) => {
 
 const Blog = ({ blog }) => { 
   const [blogInfoVisible, setBlogInfoVisible] = useState(false)
+  const [likes, setLikes] = useState(0)
+
+  useEffect(() => {
+    setLikes(blog.likes) 
+  }, [])
+  
   let viewButton = 'view';
   const showWhenVisible = { display: blogInfoVisible ? '' : 'none'}
 
@@ -33,6 +39,7 @@ const Blog = ({ blog }) => {
     let editedBlog = {...blog}
     delete editedBlog.user
     await blogService.update(blog.id, editedBlog)
+    setLikes(++blog.likes)
   }
 
   const handleInfoState = (event) => {
@@ -53,7 +60,7 @@ const Blog = ({ blog }) => {
       <button onClick={handleInfoState}>{viewButton}</button>  
       <BlogMoreInfo
       url={blog.url}
-      likes={blog.likes}
+      likes={likes}
       username={blog.user.name}
       handleLikeButton={handleLikeButton}
       visible={showWhenVisible}
