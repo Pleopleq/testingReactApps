@@ -10,12 +10,13 @@ const blogStyle = {
 
 }
 
-const BlogMoreInfo = ({ url, likes, username, visible, handleLikeButton}) => {
+const BlogMoreInfo = ({ url, likes, username, visible, handleLikeButton, handleDeleteButton}) => {
   return (
   <div style={visible}>
     <p>{url}</p>
     <p>{likes}<button onClick={handleLikeButton}>like</button></p>
     <p>{username}</p>
+    <button onClick={handleDeleteButton}>Delete</button>
   </div>
   )
 }
@@ -39,13 +40,23 @@ const Blog = ({ blog }) => {
     let editedBlog = {...blog}
     delete editedBlog.user
     await blogService.update(blog.id, editedBlog)
-    setLikes(blog.likes++)
+    setLikes(++blog.likes)
   }
 
   const handleInfoState = (event) => {
     setBlogInfoVisible(true)
     if(event.target && blogInfoVisible === true){
       setBlogInfoVisible(false)
+    }
+  }
+
+  const handleDeleteButton = async (event) => {
+    if(event){
+      const confirm = window.confirm(`remove ${blog.title}?`)
+      if(confirm){
+        await blogService.deleteBlog(blog.id)
+        window.location.reload()
+      }
     }
   }
 
@@ -63,6 +74,7 @@ const Blog = ({ blog }) => {
       likes={likes}
       username={blog.user.name}
       handleLikeButton={handleLikeButton}
+      handleDeleteButton={handleDeleteButton}
       visible={showWhenVisible}
       />
     </div>

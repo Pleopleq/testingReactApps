@@ -19,9 +19,7 @@ const App = () => {
   const [user, setUser] = useState(null)
 
   const highestLiked = blogs => {
-    
     const result = blogs.sort((a, b) => b.likes - a.likes)
-
     return result
   }
 
