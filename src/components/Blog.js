@@ -39,7 +39,7 @@ const Blog = ({ blog }) => {
     let editedBlog = {...blog}
     delete editedBlog.user
     await blogService.update(blog.id, editedBlog)
-    setLikes(++blog.likes)
+    setLikes(blog.likes++)
   }
 
   const handleInfoState = (event) => {
