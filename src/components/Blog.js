@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import blogService from '../services/blogs'
 
 const blogStyle = {
   paddingTop: 10,
@@ -9,11 +10,11 @@ const blogStyle = {
 
 }
 
-const BlogMoreInfo = ({ url, likes, username, visible}) => {
+const BlogMoreInfo = ({ url, likes, username, visible, handleLikeButton}) => {
   return (
   <div style={visible}>
     <p>{url}</p>
-    <p>{likes}<button>likes</button></p>
+    <p>{likes}<button onClick={handleLikeButton}>like</button></p>
     <p>{username}</p>
   </div>
   )
@@ -26,6 +27,12 @@ const Blog = ({ blog }) => {
 
   if(blogInfoVisible){
     viewButton = 'hide'
+  }
+
+  const handleLikeButton = async () => {
+    let editedBlog = {...blog}
+    delete editedBlog.user
+    await blogService.update(blog.id, editedBlog)
   }
 
   const handleInfoState = (event) => {
@@ -48,6 +55,7 @@ const Blog = ({ blog }) => {
       url={blog.url}
       likes={blog.likes}
       username={blog.user.name}
+      handleLikeButton={handleLikeButton}
       visible={showWhenVisible}
       />
     </div>
